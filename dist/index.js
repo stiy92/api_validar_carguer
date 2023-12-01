@@ -9,6 +9,10 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const bodegas_1 = __importDefault(require("./rutas/bodegas"));
 const Consultar_placa_1 = __importDefault(require("./rutas/Consultar_placa"));
+const motonaves_1 = __importDefault(require("./rutas/motonaves"));
+const patios_1 = __importDefault(require("./rutas/patios"));
+const turnos_aproches_1 = __importDefault(require("./rutas/turnos_aproches"));
+const turnos_bodega_1 = __importDefault(require("./rutas/turnos_bodega"));
 //A1 constante del server para usar la extancia de express servidor
 const server = new server_1.default;
 //===============================fin A1======================
@@ -27,4 +31,12 @@ server.app.use('/user', usuario_1.default);
 server.app.use('/user', bodegas_1.default);
 //rutas consultar placas
 server.app.use('/user', Consultar_placa_1.default);
+//rutas consultar motonaves
+server.app.use('/user', motonaves_1.default);
+//rutas consultar partios
+server.app.use('/user', patios_1.default);
+//rutas consultar turnos_Aproches
+server.app.use('/user', turnos_aproches_1.default);
+//rutas consultar turnos_Bodegas
+server.app.use('/user', turnos_bodega_1.default);
 // fin rutas
