@@ -14,8 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const axios_1 = __importDefault(require("axios"));
+const xml2js_1 = require("xml2js");
 const urlwb = require('../class/direction');
 const crypto = require('crypto');
+//empiezo a utilizar la dependencia para parsear xml a json
+// configuracion para parsear el xml a json
+const xmlparser = new xml2js_1.Parser({ explicitArray: false, ignoreAttrs: true });
 // para usar variabel de entorno
 //require('dotenv').config();
 // datos para realizar la peticion json
@@ -53,13 +57,37 @@ Turnos_BodegaRoutes.post('/turn_bodega', (req, res) => __awaiter(void 0, void 0,
                 SOAPAction: 'http://tempuri.org/Cargar_Turnos_Bodega',
             },
         });
+        //varalbe de tipo arreglo para agregar los datos como los quiero en mi interface map
+        let bodegas = [];
         // Verificar si la respuesta contiene la información esperada
+        xmlparser.parseString(respuest.data, (err, result) => {
+            if (err) {
+                throw new Error('Error al parsear la respuesta XML');
+            }
+            const informacionMovilGeneral = result['soap:Envelope']['soap:Body']['Cargar_BodegasResponse']['Cargar_BodegasResult']['Informacion_Movil_General'];
+            if (Array.isArray(informacionMovilGeneral)) {
+                // Si hay múltiples elementos, iterar sobre ellos
+                informacionMovilGeneral.forEach((info) => {
+                    const codigo = info.Codigo;
+                    const descripcion = info.Descripcion;
+                    // Crear un objeto de tipo Bodega y agregarlo al arreglo 'bodegas'
+                    bodegas.push({ Codigo: codigo, Descripcion: descripcion });
+                });
+            }
+            else if (informacionMovilGeneral) {
+                // Si es un solo elemento, tratarlo como un arreglo de un solo elemento
+                const codigo = informacionMovilGeneral.Codigo;
+                const descripcion = informacionMovilGeneral.Descripcion;
+                bodegas.push({ Codigo: codigo, Descripcion: descripcion });
+            }
+        });
         if (respuest.data) {
             // Aquí puedes manejar la respuesta de la solicitud SOAP
             res.status(200).json({
                 ok: true,
                 mensaje: 'Se logro conectar al servicio y esta es la respuesta:',
-                respuestaSOAP: respuest.data, // Puedes devolver la respuesta SOAP si es necesario
+                respuestaSOAP: respuest.data,
+                bodegas,
             });
         }
         else {

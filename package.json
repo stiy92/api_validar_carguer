@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Cristian Bonilla Ordoñez",
+  "author": "Cristian Steven Bonilla Ordoñez",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.2",
@@ -14,11 +14,13 @@
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21"
+    "@types/express": "^4.17.21",
+    "@types/xml2js": "^0.4.14"
   }
 }

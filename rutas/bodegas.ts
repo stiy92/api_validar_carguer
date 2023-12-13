@@ -1,9 +1,15 @@
 import { Router, Request, Response } from "express";
 import axios from "axios";
+import { Parser } from 'xml2js';
+import { Bodega } from "../interfaces/interface";
 
 const urlwb = require('../class/direction');
 
 const crypto = require('crypto');
+
+//empiezo a utilizar la dependencia para parsear xml a json
+// configuracion para parsear el xml a json
+const xmlparser = new Parser({ explicitArray: false, ignoreAttrs:true});
 
 // para usar variabel de entorno
 //require('dotenv').config();
@@ -52,30 +58,63 @@ BodegasRoutes.post('/bodegas',  async (req: Request, res: Response) =>{
               },
 
         });
-         // Verificar si la respuesta contiene la información esperada
-         if (respuest.data) {
-            // Aquí puedes manejar la respuesta de la solicitud SOAP
-            res.status(200).json({
-                ok: true,
-                mensaje: 'Se logro conectar al servicio y esta es la respuesta:',
-                respuestaSOAP: respuest.data, // Puedes devolver la respuesta SOAP si es necesario
+
+         //varalbe de tipo arreglo para agregar los datos como los quiero en mi interface map
+         let bodegas: Bodega[] = [];
+
+
+       // Verificar si la respuesta contiene la información esperada
+       xmlparser.parseString(respuest.data, (err:any, result:any)=>{
+
+        if (err) {
+            throw new Error('Error al parsear la respuesta XML');
+        }
+        const informacionMovilGeneral = result['soap:Envelope']['soap:Body']['Cargar_BodegasResponse']['Cargar_BodegasResult']['Informacion_Movil_General'];
+        
+        if (Array.isArray(informacionMovilGeneral)) {
+            // Si hay múltiples elementos, iterar sobre ellos
+            informacionMovilGeneral.forEach((info: any) => {
+                const codigo = info.Codigo;
+                const descripcion = info.Descripcion;
+
+                // Crear un objeto de tipo Bodega y agregarlo al arreglo 'bodegas'
+                bodegas.push({ Codigo: codigo, Descripcion: descripcion });
+            });
+        } else if (informacionMovilGeneral) {
+            // Si es un solo elemento, tratarlo como un arreglo de un solo elemento
+            const codigo = informacionMovilGeneral.Codigo;
+            const descripcion = informacionMovilGeneral.Descripcion;
+
+            bodegas.push({ Codigo: codigo, Descripcion: descripcion });
+        }
+    });
+
+
+     if (respuest.data) {
+        // Aquí puedes manejar la respuesta de la solicitud SOAP
+        res.status(200).json({
+            ok: true,
+            mensaje: 'Se logro conectar al servicio y esta es la respuesta:',
+        // respuestaSOAP: respuest.data, 
+            bodegas,
+        });
+    }
+        else {
+            res.status(500).json({
+                ok: false,
+                mensaje: 'No se recibió una respuesta válida del servicio SOAP',
             });
         }
-            else {
-                res.status(500).json({
-                    ok: false,
-                    mensaje: 'No se recibió una respuesta válida del servicio SOAP',
-                });
-            }
-  } catch (error:any) {
-    res.status(500).json({
-        ok: false,
-        mensaje: 'Error al procesar la solicitud',
-        error: error.message,
-    });
-    
+} catch (error:any) {
+res.status(500).json({
+    ok: false,
+    mensaje: 'Error al procesar la solicitud',
+    error: error.message,
+});
+
 }
 
 });
+
 
 export default BodegasRoutes;

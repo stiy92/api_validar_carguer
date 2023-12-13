@@ -18,8 +18,6 @@ const axios_1 = __importDefault(require("axios"));
 const urlweb = require('../class/direction');
 // componente para encryptar clave
 const crypto = require('crypto');
-// para usar variabel de entorno
-//require('dotenv').config();
 // datos para realizar la peticion json
 const UserRoutes = (0, express_1.Router)();
 // url ruta donde se encuentra el servicio web lo pondre en la variable de entorno
