@@ -3,7 +3,7 @@ import express from "express";
 // exporto por defecto el servidor de escucha
 export default class Server {
     public app: express.Application;
-    public port: number= 3000;
+    public port: number= 3050;
 
     // start the class with this constructor
 

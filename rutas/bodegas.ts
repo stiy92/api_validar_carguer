@@ -21,6 +21,7 @@ const BodegasRoutes = Router();
 // const url= process.env.TZ;
 const url =  urlwb;
 
+//este campo se debe de cambiar ya que el fornterd debe de enviar la clave encriptada despues de haber iniciado section
 // Función para generar un hash de una cadena usando el algoritmo md5 por que ccarga usa este pero se recomienda SHA256 ya que son mas caracteres
 function generarHashMD5(cadena:any) {
     const hash = crypto.createHash('md5');
@@ -33,7 +34,7 @@ BodegasRoutes.post('/bodegas',  async (req: Request, res: Response) =>{
    
     try{
 
-    const { Codigo, Clave } = req.body; // estos datos vienen en la solicitud
+    const { Codigo, Clave, Tipo } = req.body; // estos datos vienen en la solicitud
     
     // Generar el hash de la contraseña
     const hashedClave = generarHashMD5(Clave);
@@ -44,7 +45,7 @@ BodegasRoutes.post('/bodegas',  async (req: Request, res: Response) =>{
     <Cargar_Bodegas xmlns="http://tempuri.org/">
         <Usuario>${Codigo}</Usuario>
         <Clave>${hashedClave}</Clave>
-        <Tipo>B</Tipo>
+        <Tipo>${Tipo}</Tipo>
       <Propia>true</Propia>
         </Cargar_Bodegas>
         </soap:Body>
@@ -69,6 +70,7 @@ BodegasRoutes.post('/bodegas',  async (req: Request, res: Response) =>{
         if (err) {
             throw new Error('Error al parsear la respuesta XML');
         }
+        //esta es la esctructura de cada valor en el xml hasta llegar a los campos que se necesitan
         const informacionMovilGeneral = result['soap:Envelope']['soap:Body']['Cargar_BodegasResponse']['Cargar_BodegasResult']['Informacion_Movil_General'];
         
         if (Array.isArray(informacionMovilGeneral)) {
@@ -105,16 +107,16 @@ BodegasRoutes.post('/bodegas',  async (req: Request, res: Response) =>{
                 mensaje: 'No se recibió una respuesta válida del servicio SOAP',
             });
         }
-} catch (error:any) {
-res.status(500).json({
-    ok: false,
-    mensaje: 'Error al procesar la solicitud',
-    error: error.message,
-});
+               } catch (error:any) {
+                 res.status(500).json({
+                       ok: false,
+                       mensaje: 'Error al procesar la solicitud',
+                       error: error.message,
+                   });
 
-}
+                    }
+ 
+                   });
 
-});
 
-
-export default BodegasRoutes;
+           export default BodegasRoutes;

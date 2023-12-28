@@ -13,6 +13,11 @@ const motonaves_1 = __importDefault(require("./rutas/motonaves"));
 const patios_1 = __importDefault(require("./rutas/patios"));
 const turnos_aproches_1 = __importDefault(require("./rutas/turnos_aproches"));
 const turnos_bodega_1 = __importDefault(require("./rutas/turnos_bodega"));
+const asignar_turno_1 = __importDefault(require("./rutas/asignar_turno"));
+const conceptos_1 = __importDefault(require("./rutas/conceptos"));
+const config_vehi_1 = __importDefault(require("./rutas/config_vehi"));
+const empaques_1 = __importDefault(require("./rutas/empaques"));
+const modalidades_1 = __importDefault(require("./rutas/modalidades"));
 //A1 constante del server para usar la extancia de express servidor
 const server = new server_1.default;
 //===============================fin A1======================
@@ -39,4 +44,14 @@ server.app.use('/user', patios_1.default);
 server.app.use('/user', turnos_aproches_1.default);
 //rutas consultar turnos_Bodegas
 server.app.use('/user', turnos_bodega_1.default);
+//ruta agsirnar turno
+server.app.use('/user', asignar_turno_1.default);
+//ruta consultar conceptos
+server.app.use('/user', conceptos_1.default);
+//ruta consultar configuracion vehicular
+server.app.use('/user', config_vehi_1.default);
+//ruta consultar empaques
+server.app.use('/user', empaques_1.default);
+//ruta consultar modalidades
+server.app.use('/user', modalidades_1.default);
 // fin rutas

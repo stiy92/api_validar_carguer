@@ -27,6 +27,7 @@ const BodegasRoutes = (0, express_1.Router)();
 // url ruta donde se encuentra el servicio web lo pondre en la variable de entorno
 // const url= process.env.TZ;
 const url = urlwb;
+//este campo se debe de cambiar ya que el fornterd debe de enviar la clave encriptada despues de haber iniciado section
 // Función para generar un hash de una cadena usando el algoritmo md5 por que ccarga usa este pero se recomienda SHA256 ya que son mas caracteres
 function generarHashMD5(cadena) {
     const hash = crypto.createHash('md5');
@@ -36,7 +37,7 @@ function generarHashMD5(cadena) {
 // inicio de proceso para el login de res a web
 BodegasRoutes.post('/bodegas', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { Codigo, Clave } = req.body; // estos datos vienen en la solicitud
+        const { Codigo, Clave, Tipo } = req.body; // estos datos vienen en la solicitud
         // Generar el hash de la contraseña
         const hashedClave = generarHashMD5(Clave);
         // body de la peticion hacia el soap
@@ -45,7 +46,7 @@ BodegasRoutes.post('/bodegas', (req, res) => __awaiter(void 0, void 0, void 0, f
     <Cargar_Bodegas xmlns="http://tempuri.org/">
         <Usuario>${Codigo}</Usuario>
         <Clave>${hashedClave}</Clave>
-        <Tipo>B</Tipo>
+        <Tipo>${Tipo}</Tipo>
       <Propia>true</Propia>
         </Cargar_Bodegas>
         </soap:Body>
@@ -63,6 +64,7 @@ BodegasRoutes.post('/bodegas', (req, res) => __awaiter(void 0, void 0, void 0, f
             if (err) {
                 throw new Error('Error al parsear la respuesta XML');
             }
+            //esta es la esctructura de cada valor en el xml hasta llegar a los campos que se necesitan
             const informacionMovilGeneral = result['soap:Envelope']['soap:Body']['Cargar_BodegasResponse']['Cargar_BodegasResult']['Informacion_Movil_General'];
             if (Array.isArray(informacionMovilGeneral)) {
                 // Si hay múltiples elementos, iterar sobre ellos

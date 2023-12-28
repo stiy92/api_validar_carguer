@@ -1,12 +1,17 @@
 import { Router, Request, Response } from "express";
 import axios from "axios";
+import { Parser } from 'xml2js';
+import { Motonave } from "../interfaces/interface";
 
 const urlwb = require('../class/direction');
 
 const crypto = require('crypto');
 
-// para usar variabel de entorno
-//require('dotenv').config();
+
+//empiezo a utilizar la dependencia para parsear xml a json
+// configuracion para parsear el xml a json
+const xmlparser = new Parser({ explicitArray: false, ignoreAttrs:true});
+
 
 // datos para realizar la peticion json
 const MotonavesRoutes = Router();
@@ -50,30 +55,62 @@ MotonavesRoutes.post('/motonaves',  async (req: Request, res: Response) =>{
               },
 
         });
-         // Verificar si la respuesta contiene la información esperada
-         if (respuest.data) {
-            // Aquí puedes manejar la respuesta de la solicitud SOAP
-            res.status(200).json({
-                ok: true,
-                mensaje: 'Se logro conectar al servicio y esta es la respuesta:',
-                respuestaSOAP: respuest.data, // Puedes devolver la respuesta SOAP si es necesario
+
+        //varalbe de tipo arreglo para agregar los datos como los quiero en mi interface map
+        let motonaves: Motonave[] = [];
+
+        // Verificar si la respuesta contiene la información esperada
+       xmlparser.parseString(respuest.data, (err:any, result:any)=>{
+
+        if (err) {
+            throw new Error('Error al parsear la respuesta XML');
+        }
+        //esta es la esctructura de cada valor en el xml hasta llegar a los campos que se necesitan
+        const informacionMovilGeneral = result['soap:Envelope']['soap:Body']['Cargar_Arribos_de_MotonavesResponse']['Cargar_Arribos_de_MotonavesResult']['Informacion_Movil_General'];
+        
+        if (Array.isArray(informacionMovilGeneral)) {
+            // Si hay múltiples elementos, iterar sobre ellos
+            informacionMovilGeneral.forEach((info: any) => {
+                const codigo = info.Codigo;
+                const descripcion = info.Descripcion;
+
+                // Crear un objeto de tipo Bodega y agregarlo al arreglo 'bodegas'
+                motonaves.push({ Codigo: codigo, Descripcion: descripcion });
+            });
+        } else if (informacionMovilGeneral) {
+            // Si es un solo elemento, tratarlo como un arreglo de un solo elemento
+            const codigo = informacionMovilGeneral.Codigo;
+            const descripcion = informacionMovilGeneral.Descripcion;
+
+            motonaves.push({ Codigo: codigo, Descripcion: descripcion });
+        }
+    });
+
+
+     if (respuest.data) {
+        // Aquí puedes manejar la respuesta de la solicitud SOAP
+        res.status(200).json({
+            ok: true,
+            mensaje: 'Se logro conectar al servicio y esta es la respuesta:',
+        // respuestaSOAP: respuest.data, 
+            motonaves,
+        });
+    }
+        else {
+            res.status(500).json({
+                ok: false,
+                mensaje: 'No se recibió una respuesta válida del servicio SOAP',
             });
         }
-            else {
-                res.status(500).json({
-                    ok: false,
-                    mensaje: 'No se recibió una respuesta válida del servicio SOAP',
-                });
-            }
-  } catch (error:any) {
-    res.status(500).json({
-        ok: false,
-        mensaje: 'Error al procesar la solicitud',
-        error: error.message,
-    });
-    
-}
+               } catch (error:any) {
+                 res.status(500).json({
+                       ok: false,
+                       mensaje: 'Error al procesar la solicitud',
+                       error: error.message,
+                   });
 
-});
+                    }
+ 
+                   });
 
 export default MotonavesRoutes;
