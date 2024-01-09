@@ -69,6 +69,7 @@ PlacasRoutes.post('/placa', (req, res) => __awaiter(void 0, void 0, void 0, func
                     const Nombre_Conductor = info.Nombre_Conductor;
                     const Orden = info.Orden;
                     const Valido = info.Valido;
+                    const Placa = info.Placa;
                     const Transportadora = info.Transportadora;
                     const Concepto = info.Concepto;
                     const Articulo = info.Articulo;
@@ -81,7 +82,7 @@ PlacasRoutes.post('/placa', (req, res) => __awaiter(void 0, void 0, void 0, func
                     const Nombre_Motonave = info.Nombre_Motonave;
                     const Deposito = info.Deposito;
                     const Nombre_Articulo = info.Nombre_Articulo;
-                    const Configuracion_Vehicular = info.configuracion_Vehicular;
+                    const Configuracion_Vehicular = info.Configuracion_Vehicular;
                     const Observaciones = info.Observaciones;
                     const Fecha_Entrada = info.Fecha_Entrada;
                     const Unidades = info.Unidades;
@@ -95,11 +96,14 @@ PlacasRoutes.post('/placa', (req, res) => __awaiter(void 0, void 0, void 0, func
                     const De_Compartido = info.De_Compartido;
                     const Urbano_Directo_Controlado = info.Urbano_Directo_Controlado;
                     const Documentacion_Validada = info.Documentacion_Validada;
+                    const Deposito_Urbano = info.Deposito_Urbano;
                     // Crear un objeto de tipo placa y agregarlo al arreglo 'placa'
                     placa.push({
-                        Cedula: Cedula, Nombre_Conductor: Nombre_Conductor,
+                        Cedula: Cedula,
+                        Nombre_Conductor: Nombre_Conductor,
                         Orden: Orden,
                         Valido: Valido,
+                        Placa: Placa,
                         Transportadora: Transportadora,
                         Concepto: Concepto,
                         Articulo: Articulo,
@@ -125,18 +129,18 @@ PlacasRoutes.post('/placa', (req, res) => __awaiter(void 0, void 0, void 0, func
                         Saldo_Solicitud: Saldo_Solicitud,
                         De_Compartido: De_Compartido,
                         Urbano_Directo_Controlado: Urbano_Directo_Controlado,
-                        Documentacion_Validada: Documentacion_Validada
+                        Documentacion_Validada: Documentacion_Validada,
+                        Deposito_Urbano: Deposito_Urbano
                     });
                 });
             }
             else if (Consultar_PlacaResult) {
                 // Si es un solo elemento, tratarlo como un arreglo de un solo elemento
-                const codigo = Consultar_PlacaResult.Codigo;
-                const descripcion = Consultar_PlacaResult.Descripcion;
                 const Cedula = Consultar_PlacaResult.Cedula;
                 const Nombre_Conductor = Consultar_PlacaResult.Nombre_Conductor;
                 const Orden = Consultar_PlacaResult.Orden;
                 const Valido = Consultar_PlacaResult.Valido;
+                const Placa = Consultar_PlacaResult.Placa;
                 const Transportadora = Consultar_PlacaResult.Transportadora;
                 const Concepto = Consultar_PlacaResult.Concepto;
                 const Articulo = Consultar_PlacaResult.Articulo;
@@ -149,7 +153,7 @@ PlacasRoutes.post('/placa', (req, res) => __awaiter(void 0, void 0, void 0, func
                 const Nombre_Motonave = Consultar_PlacaResult.Nombre_Motonave;
                 const Deposito = Consultar_PlacaResult.Deposito;
                 const Nombre_Articulo = Consultar_PlacaResult.Nombre_Articulo;
-                const Configuracion_Vehicular = Consultar_PlacaResult.configuracion_Vehicular;
+                const Configuracion_Vehicular = Consultar_PlacaResult.Configuracion_Vehicular;
                 const Observaciones = Consultar_PlacaResult.Observaciones;
                 const Fecha_Entrada = Consultar_PlacaResult.Fecha_Entrada;
                 const Unidades = Consultar_PlacaResult.Unidades;
@@ -163,10 +167,12 @@ PlacasRoutes.post('/placa', (req, res) => __awaiter(void 0, void 0, void 0, func
                 const De_Compartido = Consultar_PlacaResult.De_Compartido;
                 const Urbano_Directo_Controlado = Consultar_PlacaResult.Urbano_Directo_Controlado;
                 const Documentacion_Validada = Consultar_PlacaResult.Documentacion_Validada;
+                const Deposito_Urbano = Consultar_PlacaResult.Deposito_Urbano;
                 placa.push({
                     Cedula: Cedula, Nombre_Conductor: Nombre_Conductor,
                     Orden: Orden,
                     Valido: Valido,
+                    Placa: Placa,
                     Transportadora: Transportadora,
                     Concepto: Concepto,
                     Articulo: Articulo,
@@ -192,7 +198,8 @@ PlacasRoutes.post('/placa', (req, res) => __awaiter(void 0, void 0, void 0, func
                     Saldo_Solicitud: Saldo_Solicitud,
                     De_Compartido: De_Compartido,
                     Urbano_Directo_Controlado: Urbano_Directo_Controlado,
-                    Documentacion_Validada: Documentacion_Validada
+                    Documentacion_Validada: Documentacion_Validada,
+                    Deposito_Urbano: Deposito_Urbano,
                 });
             }
         });

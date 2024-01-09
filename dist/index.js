@@ -17,7 +17,7 @@ const asignar_turno_1 = __importDefault(require("./rutas/asignar_turno"));
 const conceptos_1 = __importDefault(require("./rutas/conceptos"));
 const config_vehi_1 = __importDefault(require("./rutas/config_vehi"));
 const empaques_1 = __importDefault(require("./rutas/empaques"));
-const modalidades_1 = __importDefault(require("./rutas/modalidades"));
+const registrar_cargue_1 = __importDefault(require("./rutas/registrar_cargue"));
 //A1 constante del server para usar la extancia de express servidor
 const server = new server_1.default;
 //===============================fin A1======================
@@ -52,6 +52,6 @@ server.app.use('/user', conceptos_1.default);
 server.app.use('/user', config_vehi_1.default);
 //ruta consultar empaques
 server.app.use('/user', empaques_1.default);
-//ruta consultar modalidades
-server.app.use('/user', modalidades_1.default);
+//ruta registrar cargue
+server.app.use('/user', registrar_cargue_1.default);
 // fin rutas

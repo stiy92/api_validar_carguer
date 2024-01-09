@@ -13,6 +13,7 @@ import ConceptoRoutes from "./rutas/conceptos";
 import ConfivehiRoutes from "./rutas/config_vehi";
 import EmpaquesRoutes from './rutas/empaques';
 import ModalidadesRoutes from "./rutas/modalidades";
+import Registrar_Cargue_Routes from "./rutas/registrar_cargue";
 
 //A1 constante del server para usar la extancia de express servidor
 const server = new Server;
@@ -52,8 +53,8 @@ server.app.use('/user', ConceptoRoutes);
 server.app.use('/user', ConfivehiRoutes);
 //ruta consultar empaques
 server.app.use('/user', EmpaquesRoutes);
-//ruta consultar modalidades
-server.app.use('/user', ModalidadesRoutes);
+//ruta registrar cargue
+server.app.use('/user', Registrar_Cargue_Routes);
 
 
 // fin rutas

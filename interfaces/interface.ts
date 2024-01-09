@@ -3,6 +3,16 @@ export interface Bodega {
     Descripcion: String;
 }
 
+export interface asignar_turno {
+    Correcto: string;
+    Mensaje: String;
+}
+
+export interface registrar_cargue {
+    Correcto: string;
+    Mensaje: String;
+}
+
 export interface Patio {
     Codigo: string;
     Descripcion: String;
@@ -43,6 +53,7 @@ export interface Placa {
     Cedula: string;
     Nombre_Conductor: String;
     Orden: String;
+    Placa: String;
     Valido: String;
     Transportadora: String;
     Concepto: String;
@@ -70,5 +81,6 @@ export interface Placa {
     De_Compartido: String;
     Urbano_Directo_Controlado: String;
     Documentacion_Validada: String;
+    Deposito_Urbano : String;
 
 }
