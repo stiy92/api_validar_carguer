@@ -3,6 +3,16 @@ export interface Bodega {
     Descripcion: String;
 }
 
+export interface Turn_Bodega {
+    Placa: string;
+    Cedula: string;
+    Conductor: string;
+    Orden: string;
+    Nombre_Motonave: string;
+    Fecha: string;
+    Articulo: string;
+}
+
 export interface asignar_turno {
     Correcto: string;
     Mensaje: String;

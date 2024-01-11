@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import axios from "axios";
 import { Parser } from 'xml2js';
-import { Bodega } from "../interfaces/interface";
+import { Turn_Bodega, Placa } from '../interfaces/interface';
 
 const urlwb = require('../class/direction');
 
@@ -61,7 +61,7 @@ Turnos_BodegaRoutes.post('/turn_bodega',  async (req: Request, res: Response) =>
         });
 
         //varalbe de tipo arreglo para agregar los datos como los quiero en mi interface map
-        let bodegas: Bodega[] = [];
+        let Turn_bodegas: Turn_Bodega[] = [];
 
          // Verificar si la respuesta contiene la información esperada
          xmlparser.parseString(respuest.data, (err:any, result:any)=>{
@@ -69,23 +69,33 @@ Turnos_BodegaRoutes.post('/turn_bodega',  async (req: Request, res: Response) =>
             if (err) {
                 throw new Error('Error al parsear la respuesta XML');
             }
-            const informacionMovilGeneral = result['soap:Envelope']['soap:Body']['Cargar_BodegasResponse']['Cargar_BodegasResult']['Informacion_Movil_General'];
+            const Informacion_Movil_Turnos_Aproche = result['soap:Envelope']['soap:Body']['Cargar_Turnos_BodegaResponse']['Cargar_Turnos_BodegaResult']['Informacion_Movil_Turnos_Aproche'];
             
-            if (Array.isArray(informacionMovilGeneral)) {
+            if (Array.isArray(Informacion_Movil_Turnos_Aproche)) {
                 // Si hay múltiples elementos, iterar sobre ellos
-                informacionMovilGeneral.forEach((info: any) => {
-                    const codigo = info.Codigo;
-                    const descripcion = info.Descripcion;
+                Informacion_Movil_Turnos_Aproche.forEach((info: any) => {
+                    const placa = info.Placa;
+                    const cedula = info.Cedula;
+                    const conductor = info.Conductor;
+                    const orden = info.Orden;
+                    const nombre_motonave = info.Nombre_Motonave;
+                    const fecha = info.Fecha;
+                    const articulo = info.Articulo;
 
-                    // Crear un objeto de tipo Bodega y agregarlo al arreglo 'bodegas'
-                    bodegas.push({ Codigo: codigo, Descripcion: descripcion });
+                    // Crear un objeto de tipo turn_Bodega y agregarlo al arreglo 'Turn_bodegas'
+                    Turn_bodegas.push({ Placa: placa, Cedula: cedula, Conductor: conductor, Orden: orden, Nombre_Motonave: nombre_motonave, Fecha:fecha, Articulo: articulo });
                 });
-            } else if (informacionMovilGeneral) {
+            } else if (Informacion_Movil_Turnos_Aproche) {
                 // Si es un solo elemento, tratarlo como un arreglo de un solo elemento
-                const codigo = informacionMovilGeneral.Codigo;
-                const descripcion = informacionMovilGeneral.Descripcion;
+                const placa= Informacion_Movil_Turnos_Aproche.Placa;
+                const cedula = Informacion_Movil_Turnos_Aproche.Cedula;
+                const conductor = Informacion_Movil_Turnos_Aproche.Conductor;
+                const orden = Informacion_Movil_Turnos_Aproche.Orden;
+                const nombre_motonave = Informacion_Movil_Turnos_Aproche.Nombre_Motonave;
+                const fecha = Informacion_Movil_Turnos_Aproche.Fecha;
+                const articulo = Informacion_Movil_Turnos_Aproche.Articulo;
 
-                bodegas.push({ Codigo: codigo, Descripcion: descripcion });
+                Turn_bodegas.push({ Placa: placa, Cedula: cedula, Conductor: conductor, Orden: orden, Nombre_Motonave: nombre_motonave, Fecha:fecha, Articulo: articulo });
             }
         });
 
@@ -95,8 +105,8 @@ Turnos_BodegaRoutes.post('/turn_bodega',  async (req: Request, res: Response) =>
             res.status(200).json({
                 ok: true,
                 mensaje: 'Se logro conectar al servicio y esta es la respuesta:',
-                respuestaSOAP: respuest.data, 
-                bodegas,
+               // respuestaSOAP: respuest.data, 
+                Turn_bodegas,
             });
         }
             else {

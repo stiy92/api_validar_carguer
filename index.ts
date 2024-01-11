@@ -55,6 +55,8 @@ server.app.use('/user', ConfivehiRoutes);
 server.app.use('/user', EmpaquesRoutes);
 //ruta registrar cargue
 server.app.use('/user', Registrar_Cargue_Routes);
+//ruta registrar cargue
+server.app.use('/user', ModalidadesRoutes);
 
 
 // fin rutas
