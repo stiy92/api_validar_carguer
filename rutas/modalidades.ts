@@ -3,7 +3,14 @@ import axios from "axios";
 import { Parser } from 'xml2js';
 import { Modalidades } from "../interfaces/interface";
 
-const urlwb = require('../class/direction');
+//inicializao esta dependencia para utilizar las variables de entorno
+require('dotenv').config();
+
+// inicializo la variable de entorno
+const urlwb1 = process.env.WebUrl;
+
+//aqui paso esa variable con la dependencia de que utilizara axio para las peticiones soap
+const urlwb = `${urlwb1}?wsdl`;
 
 const crypto = require('crypto');
 

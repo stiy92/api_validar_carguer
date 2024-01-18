@@ -19,12 +19,20 @@ const config_vehi_1 = __importDefault(require("./rutas/config_vehi"));
 const empaques_1 = __importDefault(require("./rutas/empaques"));
 const modalidades_1 = __importDefault(require("./rutas/modalidades"));
 const registrar_cargue_1 = __importDefault(require("./rutas/registrar_cargue"));
+const asignar_turno_eth_1 = __importDefault(require("./rutas/asignar_turno_eth"));
+//inicializao esta dependencia para utilizar las variables de entorno
+// try {
+//     require('dotenv').config();
+//   } catch (error:any) {
+//     console.error('Error al cargar variables de entorno:', error.message);
+//   }
 //A1 constante del server para usar la extancia de express servidor
 const server = new server_1.default;
 //===============================fin A1======================
 server.start(() => {
     console.log(`El servidor esta corriendo en el puerto ${server.port}`);
 });
+//console.log(process.env);
 //middleware with bodyparser pasa estos parametros primero estos middleware deben de ir de primero ya que cuando pase la ruta user deben de existir los datos para el registro
 server.app.use(body_parser_1.default.urlencoded({ extended: true }));
 server.app.use(body_parser_1.default.json());
@@ -57,4 +65,6 @@ server.app.use('/user', empaques_1.default);
 server.app.use('/user', registrar_cargue_1.default);
 //ruta registrar cargue
 server.app.use('/user', modalidades_1.default);
+//ruta ver turnos o asignar
+server.app.use('/user', asignar_turno_eth_1.default);
 // fin rutas

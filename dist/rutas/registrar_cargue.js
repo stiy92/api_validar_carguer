@@ -15,7 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const axios_1 = __importDefault(require("axios"));
 const xml2js_1 = require("xml2js");
-const urlwb = require('../class/direction');
+const asignar_turno_DB_1 = require("../serviciosdb/asignar_turno_DB");
+//inicializao esta dependencia para utilizar las variables de entorno
+require('dotenv').config();
+// inicializo la variable de entorno
+const urlwb1 = process.env.WebUrl;
+//aqui paso esa variable con la dependencia de que utilizara axio para las peticiones soap
+const urlwb = `${urlwb1}?wsdl`;
 const crypto = require('crypto');
 // configuracion para parsear el xml a json
 const xmlparser = new xml2js_1.Parser({ explicitArray: false, ignoreAttrs: true });
@@ -32,7 +38,8 @@ function generarHashMD5(cadena) {
 // inicio de proceso para el login de res a web
 Registrar_Cargue_Routes.post('/Registrar_cargue', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { Codigo, Clave, Placa, Concepto, Bodega, Modalidad, Empaque, Unidades, Escotilla, Configuracion_Vehicular, Configuracion_Peso_Cambiado, Compartido, Bodega_Compartido, Concepto_Compartido, Peso_a_Cambiar, Bodega_Resgistro, es_Urbano_Directo_Controlado, Validar_Documentos } = req.body; // estos datos vienen en la solicitud
+        const { Codigo, Clave, Placa, Concepto, Bodega, Modalidad, Empaque, Unidades, Escotilla, Configuracion_Vehicular, Confirmacion_Peso_Cambiado, Compartido, Bodega_Compartido, Concepto_Compartido, Peso_a_Cambiar, Bodega_Registro, es_Urbano_Directo_Controlado, Validar_Documentos } = req.body; // estos datos vienen en la solicitud
+        //console.log(Configuracion_Vehicular)
         // Generar el hash de la contraseña
         const hashedClave = generarHashMD5(Clave);
         // body de la peticion hacia el soap
@@ -49,12 +56,12 @@ Registrar_Cargue_Routes.post('/Registrar_cargue', (req, res) => __awaiter(void 0
         <Unidades>${Unidades}</Unidades>
         <Escotilla>${Escotilla}</Escotilla>
         <Configuracion_Vehicular>${Configuracion_Vehicular}</Configuracion_Vehicular>
-        <Confirmacion_Peso_Cambiado>${Configuracion_Peso_Cambiado}</Confirmacion_Peso_Cambiado>
+        <Confirmacion_Peso_Cambiado>${Confirmacion_Peso_Cambiado}</Confirmacion_Peso_Cambiado>
         <Compartido>${Compartido}</Compartido>
         <Bodega_Compartido>${Bodega_Compartido}</Bodega_Compartido>
         <Concepto_Compartido>${Concepto_Compartido}</Concepto_Compartido>
         <Peso_a_Cambiar>${Peso_a_Cambiar}</Peso_a_Cambiar>
-        <Bodega_Registro>${Bodega_Resgistro}</Bodega_Registro>
+        <Bodega_Registro>${Bodega_Registro}</Bodega_Registro>
         <es_Urbano_Directo_Controlado>${es_Urbano_Directo_Controlado}</es_Urbano_Directo_Controlado>
         <Validar_Documentos>${Validar_Documentos}</Validar_Documentos>
 
@@ -64,7 +71,7 @@ Registrar_Cargue_Routes.post('/Registrar_cargue', (req, res) => __awaiter(void 0
         const respuest = yield axios_1.default.post(url, xmlBody, {
             headers: {
                 'Content-Type': 'text/xml; charset=utf-8',
-                SOAPAction: 'http://tempuri.org/Asignar_Turno_Vehiculo',
+                SOAPAction: 'http://tempuri.org/Registrar_Cargue',
             },
         });
         //varalbe de tipo arreglo para agregar los datos como los quiero en mi interface map
@@ -98,13 +105,17 @@ Registrar_Cargue_Routes.post('/Registrar_cargue', (req, res) => __awaiter(void 0
                 });
             }
         });
+        //console.log('Rewspuesta del servidor:', respuest);
         if (respuest.data) {
             // Aquí puedes manejar la respuesta de la solicitud SOAP
+            const Turno = req.body;
+            const actualizacionExitosa = yield (0, asignar_turno_DB_1.cambiarestadoturno)(Turno);
             res.status(200).json({
                 ok: true,
-                mensaje: 'Se logro conectar al servicio y esta es la respuesta:',
-                // respuestaSOAP: respuest.data, 
-                R_turno,
+                mensaje: 'Se logro realizar el proceso de Registrar cargue y esta es la respuesta:',
+                // respuestaSOAP: respuest.data,
+                actualizacionExitosa,
+                R_turno
             });
         }
         else {
@@ -115,6 +126,7 @@ Registrar_Cargue_Routes.post('/Registrar_cargue', (req, res) => __awaiter(void 0
         }
     }
     catch (error) {
+        //   console.log('Error al procesar la solicitud', error)
         res.status(500).json({
             ok: false,
             mensaje: 'Error al procesar la solicitud',

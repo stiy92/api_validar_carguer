@@ -14,7 +14,14 @@ import ConfivehiRoutes from "./rutas/config_vehi";
 import EmpaquesRoutes from './rutas/empaques';
 import ModalidadesRoutes from "./rutas/modalidades";
 import Registrar_Cargue_Routes from "./rutas/registrar_cargue";
+import Asignar_turno_eth_Routes from "./rutas/asignar_turno_eth";
 
+//inicializao esta dependencia para utilizar las variables de entorno
+// try {
+//     require('dotenv').config();
+//   } catch (error:any) {
+//     console.error('Error al cargar variables de entorno:', error.message);
+//   }
 //A1 constante del server para usar la extancia de express servidor
 const server = new Server;
 //===============================fin A1======================
@@ -23,6 +30,7 @@ server.start(()=>{
     console.log(`El servidor esta corriendo en el puerto ${server.port}`);
     
 })
+//console.log(process.env);
 //middleware with bodyparser pasa estos parametros primero estos middleware deben de ir de primero ya que cuando pase la ruta user deben de existir los datos para el registro
 server.app.use(bodyParser.urlencoded({ extended:true}));
 server.app.use(bodyParser.json());
@@ -57,6 +65,9 @@ server.app.use('/user', EmpaquesRoutes);
 server.app.use('/user', Registrar_Cargue_Routes);
 //ruta registrar cargue
 server.app.use('/user', ModalidadesRoutes);
+//ruta ver turnos o asignar
+server.app.use('/user', Asignar_turno_eth_Routes);
+
 
 
 // fin rutas

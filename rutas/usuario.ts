@@ -4,7 +4,14 @@ import { Parser } from 'xml2js';
 import { Usuario } from '../interfaces/interface';
 
 // llamando ruta principal de webservices
-const urlweb = require('../class/direction')
+//inicializao esta dependencia para utilizar las variables de entorno
+require('dotenv').config();
+
+// inicializo la variable de entorno
+const urlwb1 = process.env.WebUrl;
+
+//aqui paso esa variable con la dependencia de que utilizara axio para las peticiones soap
+const urlweb = `${urlwb1}?wsdl`;
 
 // componente para encryptar clave
 const crypto = require('crypto');

@@ -15,7 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const axios_1 = __importDefault(require("axios"));
 const xml2js_1 = require("xml2js");
-const urlwb = require('../class/direction');
+//inicializao esta dependencia para utilizar las variables de entorno
+require('dotenv').config();
+// inicializo la variable de entorno
+const urlwb1 = process.env.WebUrl;
+//aqui paso esa variable con la dependencia de que utilizara axio para las peticiones soap
+const urlwb = `${urlwb1}?wsdl`;
 const crypto = require('crypto');
 // configuracion para parsear el xml a json
 const xmlparser = new xml2js_1.Parser({ explicitArray: false, ignoreAttrs: true });
@@ -29,7 +34,7 @@ function generarHashMD5(cadena) {
     hash.update(cadena);
     return hash.digest('hex');
 }
-// inicio de proceso para el login de res a web
+// inicio de proceso para asignar_turno de res a web
 Asignar_turno_Routes.post('/Asignar_turno', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { Codigo, Clave, Placa, Concepto, Bodega, Modalidad, Empaque, Unidades, Escotilla } = req.body; // estos datos vienen en la solicitud

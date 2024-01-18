@@ -3,7 +3,15 @@ import axios from "axios";
 import { Parser } from 'xml2js';
 import { Placa } from '../interfaces/interface';
 
-const urlwb = require('../class/direction');
+const ethDB = require("../serviciosdb/asignar_turno_DB");
+//inicializao esta dependencia para utilizar las variables de entorno
+require('dotenv').config();
+
+// inicializo la variable de entorno
+const urlwb1 = process.env.WebUrl;
+
+//aqui paso esa variable con la dependencia de que utilizara axio para las peticiones soap
+const urlwb = `${urlwb1}?wsdl`;
 
 const crypto = require('crypto');
 
@@ -29,9 +37,14 @@ function generarHashMD5(cadena:any) {
 // inicio de proceso para el login de res a web
 PlacasRoutes.post('/placa',  async (req: Request, res: Response) =>{
    
+    const { Codigo, Clave, Placa, Tipo } = req.body; // estos datos vienen en la solicitud
+
+    
     try{
 
-    const { Codigo, Clave, Placa } = req.body; // estos datos vienen en la solicitud
+        
+
+    
     
     // Generar el hash de la contraseña
     const hashedClave = generarHashMD5(Clave);
@@ -213,13 +226,35 @@ xmlparser.parseString(respuest.data, (err:any, result:any)=>{
 
 
 if (respuest.data) {
- // Aquí puedes manejar la respuesta de la solicitud SOAP
- res.status(200).json({
-     ok: true,
-     mensaje: 'Se logro conectar al servicio y esta es la respuesta:',
- // respuestaSOAP: respuest.data, 
-     placa,
- });
+
+        const Turno:any= {
+        Placa:Placa,
+        Codigo:Tipo,
+        Producto:placa[0].Nombre_Articulo
+    }
+  
+     //validar si tiene turno la placa
+     const Estadoturno= await ethDB.verificarEstadoEnturnado(Turno);
+               
+     //fin validar placa
+ // Aquí puedes manejar la respuesta
+ if (Estadoturno !== null && Estadoturno !== undefined) {
+
+    if(Estadoturno==true){
+        //tiene turno
+        res.status(200).json({
+            ok: false,
+            mensaje: 'Esta placa ya tiene un turno asignado:',
+            placa
+        });
+           }else{
+              //no tiene turno
+        res.status(200).json({
+           ok: true,
+           mensaje: 'Esta placa no tiene asignado un turno:',
+           placa
+       }); 
+           } }
 }
  else {
      res.status(500).json({

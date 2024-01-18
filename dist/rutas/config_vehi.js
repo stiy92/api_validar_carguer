@@ -15,7 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const axios_1 = __importDefault(require("axios"));
 const xml2js_1 = require("xml2js");
-const urlwb = require('../class/direction');
+//inicializao esta dependencia para utilizar las variables de entorno
+require('dotenv').config();
+// inicializo la variable de entorno
+const urlwb1 = process.env.WebUrl;
+//aqui paso esa variable con la dependencia de que utilizara axio para las peticiones soap
+const urlwb = `${urlwb1}?wsdl`;
 const crypto = require('crypto');
 //empiezo a utilizar la dependencia para parsear xml a json
 // configuracion para parsear el xml a json

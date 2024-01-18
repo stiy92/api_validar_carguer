@@ -16,7 +16,12 @@ const express_1 = require("express");
 const axios_1 = __importDefault(require("axios"));
 const xml2js_1 = require("xml2js");
 // llamando ruta principal de webservices
-const urlweb = require('../class/direction');
+//inicializao esta dependencia para utilizar las variables de entorno
+require('dotenv').config();
+// inicializo la variable de entorno
+const urlwb1 = process.env.WebUrl;
+//aqui paso esa variable con la dependencia de que utilizara axio para las peticiones soap
+const urlweb = `${urlwb1}?wsdl`;
 // componente para encryptar clave
 const crypto = require('crypto');
 //empiezo a utilizar la dependencia para parsear xml a json

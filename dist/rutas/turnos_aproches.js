@@ -14,7 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const axios_1 = __importDefault(require("axios"));
-const urlwb = require('../class/direction');
+//inicializao esta dependencia para utilizar las variables de entorno
+require('dotenv').config();
+// inicializo la variable de entorno
+const urlwb1 = process.env.WebUrl;
+//aqui paso esa variable con la dependencia de que utilizara axio para las peticiones soap
+const urlwb = `${urlwb1}?wsdl`;
 const crypto = require('crypto');
 // para usar variabel de entorno
 //require('dotenv').config();

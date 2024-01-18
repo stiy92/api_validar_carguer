@@ -3,7 +3,14 @@ import axios from "axios";
 import { Parser } from 'xml2js';
 import { asignar_turno } from '../interfaces/interface';
 
-const urlwb = require('../class/direction');
+//inicializao esta dependencia para utilizar las variables de entorno
+require('dotenv').config();
+
+// inicializo la variable de entorno
+const urlwb1 = process.env.WebUrl;
+
+//aqui paso esa variable con la dependencia de que utilizara axio para las peticiones soap
+const urlwb = `${urlwb1}?wsdl`;
 
 const crypto = require('crypto');
 
@@ -23,7 +30,7 @@ function generarHashMD5(cadena:any) {
     return hash.digest('hex');
 }
 
-// inicio de proceso para el login de res a web
+// inicio de proceso para asignar_turno de res a web
 Asignar_turno_Routes.post('/Asignar_turno',  async (req: Request, res: Response) =>{
    
     try{
