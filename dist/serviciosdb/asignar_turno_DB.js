@@ -154,10 +154,7 @@ function verificarEstadoEnturnado(Turno) {
         try {
             const pool = yield sql.connect(con);
             // Consultar el estado "enturnado" para el código, producto y placa dados
-            const result = yield pool
-                .request()
-                .query(`
-                    SELECT 
+            const result = yield pool.request().query(`SELECT 
                         MAX(CASE WHEN status = 'enturnado' THEN 1 ELSE 0 END) AS estaEnturnado
                     FROM shifts 
                     WHERE code = '${Turno.Codigo}' AND product = '${Turno.Producto}' AND plaque = '${Turno.Placa}'

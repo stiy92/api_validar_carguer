@@ -105,18 +105,32 @@ Registrar_Cargue_Routes.post('/Registrar_cargue', (req, res) => __awaiter(void 0
                 });
             }
         });
-        //console.log('Rewspuesta del servidor:', respuest);
+        // Aquí puedes manejar la respuesta de la solicitud SOAP
+        //console.log('Respuesta del servidor:', R_turno);
+        //imprimir respuesta del servidor
+        //console.log('Respuesta del servidor:', respuest);
         if (respuest.data) {
-            // Aquí puedes manejar la respuesta de la solicitud SOAP
-            const Turno = req.body;
-            const actualizacionExitosa = yield (0, asignar_turno_DB_1.cambiarestadoturno)(Turno);
-            res.status(200).json({
-                ok: true,
-                mensaje: 'Se logro realizar el proceso de Registrar cargue y esta es la respuesta:',
-                // respuestaSOAP: respuest.data,
-                actualizacionExitosa,
-                R_turno
-            });
+            if (R_turno.length > 0 && R_turno[0].Correcto === 'true') {
+                const Turno = req.body;
+                const actualizacionExitosa = yield (0, asignar_turno_DB_1.cambiarestadoturno)(Turno);
+                res.status(200).json({
+                    ok: true,
+                    mensaje: 'Se logro realizar el proceso de Registrar cargue y esta es la respuesta:',
+                    // respuestaSOAP: respuest.data,
+                    actualizacionExitosa,
+                    R_turno
+                });
+            }
+            else {
+                console.error('Error en la respuesta del servidor:', R_turno);
+                const mensajeError = R_turno[0].Mensaje || 'Mensaje no definido en la respuesta del servidor';
+                console.error('Mensjase:', mensajeError);
+                res.status(500).json({
+                    ok: false,
+                    mensaje: 'No se registra el cargue y esta es la respuesta:',
+                    mensajeError
+                });
+            }
         }
         else {
             res.status(500).json({
