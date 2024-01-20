@@ -5,13 +5,13 @@ const sql = require('mssql');
 const con = require('../class/direction');
 
 //realizar la consulta de sitios
-export async function verturno(Turno:any) {
+export async function verproducto(Turno:any) {
     try {
 //crear la instancia de la conexión con ..class/direction
 const pool = await sql.connect(con);
 
 //luego realizar la consulta
-const result = await pool.request().query(`select turn, plaque, product, created_at  from shifts where status= 'enturnado' and sector_name= '${Turno.sector}' `)
+const result = await pool.request().query(`select product from shifts where status= 'enturnado' and sector_name= '${Turno.sector}' `)
   
 sql.close();
 
@@ -22,3 +22,20 @@ return result;
     }
 }
 //fin de ver los turnos
+
+export async function verturno(Turno:any) {
+    try {
+//crear la instancia de la conexión con ..class/direction
+const pool = await sql.connect(con);
+
+//luego realizar la consulta
+const result = await pool.request().query(`select turn, plaque, created_at  from shifts where status= 'enturnado' and product= '${Turno.producto}' `)
+  
+sql.close();
+
+return result;
+
+    } catch (err:any){
+        console.log(err);
+    }
+}

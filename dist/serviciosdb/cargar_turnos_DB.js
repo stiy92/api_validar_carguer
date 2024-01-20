@@ -9,19 +9,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verturno = void 0;
+exports.verturno = exports.verproducto = void 0;
 //requeriendo las dependencias de mssql
 const sql = require('mssql');
 //requeriendo las crednciales y rutas a la DB
 const con = require('../class/direction');
 //realizar la consulta de sitios
+function verproducto(Turno) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            //crear la instancia de la conexión con ..class/direction
+            const pool = yield sql.connect(con);
+            //luego realizar la consulta
+            const result = yield pool.request().query(`select product from shifts where status= 'enturnado' and sector_name= '${Turno.sector}' `);
+            sql.close();
+            return result;
+        }
+        catch (err) {
+            console.log(err);
+        }
+    });
+}
+exports.verproducto = verproducto;
+//fin de ver los turnos
 function verturno(Turno) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             //crear la instancia de la conexión con ..class/direction
             const pool = yield sql.connect(con);
             //luego realizar la consulta
-            const result = yield pool.request().query(`select turn, plaque, product, created_at  from shifts where status= 'enturnado' and sector_name= '${Turno.sector}' `);
+            const result = yield pool.request().query(`select turn, plaque, created_at  from shifts where status= 'enturnado' and product= '${Turno.producto}' `);
             sql.close();
             return result;
         }
@@ -31,4 +48,3 @@ function verturno(Turno) {
     });
 }
 exports.verturno = verturno;
-//fin de ver los turnos

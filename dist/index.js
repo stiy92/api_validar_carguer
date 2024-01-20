@@ -22,6 +22,7 @@ const registrar_cargue_1 = __importDefault(require("./rutas/registrar_cargue"));
 const asignar_turno_eth_1 = __importDefault(require("./rutas/asignar_turno_eth"));
 const Cargar_sitios_cargar_1 = __importDefault(require("./rutas/Cargar_sitios_cargar"));
 const ver_turnos_1 = __importDefault(require("./rutas/ver_turnos"));
+const verproducto_1 = __importDefault(require("./rutas/verproducto"));
 //inicializao esta dependencia para utilizar las variables de entorno
 // try {
 //     require('dotenv').config();
@@ -73,4 +74,6 @@ server.app.use('/user', asignar_turno_eth_1.default);
 server.app.use('/user', Cargar_sitios_cargar_1.default);
 //ruta ver turnos
 server.app.use('/user', ver_turnos_1.default);
+//ruta ver productos
+server.app.use('/user', verproducto_1.default);
 // fin rutas

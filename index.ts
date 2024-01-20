@@ -17,6 +17,7 @@ import Registrar_Cargue_Routes from "./rutas/registrar_cargue";
 import Asignar_turno_eth_Routes from "./rutas/asignar_turno_eth";
 import Cargar_sitios_Routes from "./rutas/Cargar_sitios_cargar";
 import Cargar_turnos_Routes from "./rutas/ver_turnos";
+import Cargar_productos_Routes from "./rutas/verproducto";
 
 //inicializao esta dependencia para utilizar las variables de entorno
 // try {
@@ -73,6 +74,8 @@ server.app.use('/user', Asignar_turno_eth_Routes);
 server.app.use('/user', Cargar_sitios_Routes);
 //ruta ver turnos
 server.app.use('/user', Cargar_turnos_Routes);
+//ruta ver productos
+server.app.use('/user', Cargar_productos_Routes);
 
 
 
